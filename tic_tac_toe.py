@@ -231,7 +231,7 @@ def start_gui():
         # Display the result in a message box
         tk.messagebox.showinfo("Game Over", result)
 
-    # Create a 3x3 grid to store button references
+    # Create a 3x3 grid to store buttons
     buttons = [[None for _ in range(3)] for _ in range(3)]
     
     # Create and place buttons in the grid
