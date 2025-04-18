@@ -1,6 +1,8 @@
 import math
 import time
 import numpy as np 
+import tkinter as tk
+from tkinter import messagebox
 
 #game board
 initial_state = np.full((3,3)," ")
@@ -166,5 +168,59 @@ def play_game():
     else:
         print("It's a tie!")
 
+# GUI Implementation
+def start_gui():
+    root = tk.Tk()
+    root.title("Tic-Tac-Toe")
+    current_state = initial_state.copy()
+    current_player = "X"
+
+    def update_button_text(row, col):
+        nonlocal current_player
+        if current_state[row][col] == " " and not terminal(current_state):
+            current_state[row][col] = current_player
+            buttons[row][col].config(text=current_player)
+            if terminal(current_state):
+                end_game()
+            else:
+                current_player = "O" if current_player == "X" else "X"
+                if current_player == "O":
+                    root.after(500, ai_move)
+
+    def ai_move():
+        nonlocal current_player
+        move = minimax(current_state, "O")
+        if move:
+            row, col = move
+            current_state[row][col] = "O"
+            buttons[row][col].config(text="O")
+            if terminal(current_state):
+                end_game()
+            else:
+                current_player = "X"
+
+    def end_game():
+        score = utility(current_state)
+        if score == 1:
+            result = "X wins!"
+        elif score == -1:
+            result = "O wins!"
+        elif score == 0:
+            result = "It's a tie!"
+        for row in range(3):
+            for col in range(3):
+                buttons[row][col].config(state="disabled")
+        tk.messagebox.showinfo("Game Over", result)
+
+    buttons = [[None for _ in range(3)] for _ in range(3)]
+    
+    for row in range(3):
+        for col in range(3):
+            button = tk.Button(root, text=" ", width=17, height=6,command=lambda r=row, c=col: update_button_text(r, c))
+            button.grid(row=row, column=col)
+            buttons[row][col] = button
+
+    root.mainloop()
+
 if __name__ == "__main__":
-    play_game()
+    start_gui()
