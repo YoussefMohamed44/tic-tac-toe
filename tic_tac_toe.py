@@ -174,6 +174,7 @@ def start_gui():
     root = tk.Tk()
     # Set the window title
     root.title("Tic-Tac-Toe")
+    root.resizable(False,False)
     # Initialize the game state and set the starting player
     current_state = initial_state.copy()
     current_player = "X"
@@ -231,6 +232,15 @@ def start_gui():
         # Display the result in a message box
         tk.messagebox.showinfo("Game Over", result)
 
+    #reset game by reseting the current state to initial state and current player to X and free the board
+    def reset_game():
+        nonlocal current_state, current_player
+        current_state = initial_state.copy()
+        current_player = "X"
+        for row in range(3):
+            for col in range(3):
+                buttons[row][col].config(text=" ", state="normal")
+
     # Create a 3x3 grid to store buttons
     buttons = [[None for _ in range(3)] for _ in range(3)]
     
@@ -243,6 +253,10 @@ def start_gui():
             button.grid(row=row, column=col)
             # Store the button reference in the grid
             buttons[row][col] = button
+
+    # Add reset button
+    reset_button = tk.Button(root, text="Reset Game", command=reset_game, bg='gray')
+    reset_button.grid(row=3, column=0, columnspan=3, sticky="ew", padx=10, pady=5)
 
     # Start the Tkinter event loop to display the window
     root.mainloop()
