@@ -170,57 +170,83 @@ def play_game():
 
 # GUI Implementation
 def start_gui():
+    # Create the main application window
     root = tk.Tk()
+    # Set the window title
     root.title("Tic-Tac-Toe")
+    # Initialize the game state and set the starting player
     current_state = initial_state.copy()
     current_player = "X"
 
+    
     def update_button_text(row, col):
+        # Access the current_player variable from the enclosing scope
         nonlocal current_player
+        # Check if the selected cell is empty and the game is not over
         if current_state[row][col] == " " and not terminal(current_state):
+            # Update the game state and button text with the current player's symbol
             current_state[row][col] = current_player
             buttons[row][col].config(text=current_player)
+            # Check if the game has ended after the move
             if terminal(current_state):
                 end_game()
             else:
+                # Switch the current player
                 current_player = "O" if current_player == "X" else "X"
+                # If it's the AI's turn, schedule the AI move with a delay
                 if current_player == "O":
                     root.after(500, ai_move)
 
     def ai_move():
+        # Access the current_player variable from the enclosing scope
         nonlocal current_player
+        # Determine the AI's move using the minimax algorithm
         move = minimax(current_state, "O")
         if move:
             row, col = move
+            # Update the game state and button text for the AI's move
             current_state[row][col] = "O"
             buttons[row][col].config(text="O")
+             # Check if the game has ended after the AI's move
             if terminal(current_state):
                 end_game()
             else:
+                 # Switch back to the human player
                 current_player = "X"
 
     def end_game():
+        # Calculate the utility score to determine the result
         score = utility(current_state)
+        # Determine the result based on the utility score
         if score == 1:
             result = "X wins!"
         elif score == -1:
             result = "O wins!"
         elif score == 0:
             result = "It's a tie!"
+        # Disable all buttons to prevent further moves
         for row in range(3):
             for col in range(3):
                 buttons[row][col].config(state="disabled")
+        # Display the result in a message box
         tk.messagebox.showinfo("Game Over", result)
 
+    # Create a 3x3 grid to store button references
     buttons = [[None for _ in range(3)] for _ in range(3)]
     
+    # Create and place buttons in the grid
     for row in range(3):
         for col in range(3):
+            # Create a button for each cell with a command to update the button text
             button = tk.Button(root, text=" ", width=17, height=6,command=lambda r=row, c=col: update_button_text(r, c))
+            # Place the button in the grid
             button.grid(row=row, column=col)
+            # Store the button reference in the grid
             buttons[row][col] = button
 
+    # Start the Tkinter event loop to display the window
     root.mainloop()
 
 if __name__ == "__main__":
+    # Run the start_gui function when the script is executed
     start_gui()
