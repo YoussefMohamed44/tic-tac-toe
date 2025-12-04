@@ -1,9 +1,3 @@
-
----
-
-# 📄 **2) Tic-Tac-Toe AI Player — README.md**
-
-```md
 # Tic-Tac-Toe AI Player (Minimax + Alpha-Beta Pruning)
 
 A Python-based Tic-Tac-Toe game with an unbeatable AI opponent.  
